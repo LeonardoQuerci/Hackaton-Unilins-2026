@@ -3,17 +3,16 @@ import sys
 import os
 from colorama import Fore, Style, init
 
-# Inicializa o colorama para cores no terminal
-init(autoreset=True)
 
-# Revisar a mudança de cores 
-def digitar_pausado(texto, atraso=0.05):
-    """Simula o efeito de uma máquina de escrever no terminal."""
+def digitar_pausado(texto, atraso=0.05, cor=""):
+    sys.stdout.write(cor)
     for char in texto:
         sys.stdout.write(char)
         sys.stdout.flush()
         time.sleep(atraso)
+    sys.stdout.write(Style.RESET_ALL)
     print()
+
 
 def limpar_tela():
     """Limpa o terminal dependendo do Sistema Operacional."""
@@ -29,14 +28,14 @@ def fase_1():
     print("\n")
 
     # Storytelling
-    digitar_pausado(Fore.GREEN + "Conectando ao terminal de fósforo verde...")
+    digitar_pausado("Conectando ao terminal de fósforo verde...",cor=Fore.GREEN)
     time.sleep(1)
-    digitar_pausado(Fore.GREEN + "Acesso físico detectado no Laboratório Particular.")
+    digitar_pausado("Acesso físico detectado no Laboratório Particular.", cor=Fore.GREEN)
     time.sleep(1)
-    digitar_pausado(Fore.WHITE + "\nApós meses de investigação sobre o paradeiro do Dr. Alistair Vance, você finalmente consegue acesso físico ao seu laboratório particular. No centro da sala, um terminal de fósforo verde antigo permanece ligado. A tela está bloqueada por um protocolo de segurança de baixo nível, emitindo um brilho hipnótico. Não há campos para digitar nomes, apenas um prompt de comando aguardando uma sequência de identificação.:")
-    digitar_pausado(Fore.YELLOW + "A base de tudo é a memória. Identifique-se para iniciar o protocolo.")
+    digitar_pausado("\nApós meses de investigação sobre o paradeiro do Dr. Alistair Vance, você finalmente consegue acesso físico ao seu laboratório particular. No centro da sala, um terminal de fósforo verde antigo permanece ligado. A tela está bloqueada por um protocolo de segurança de baixo nível, emitindo um brilho hipnótico. Não há campos para digitar nomes, apenas um prompt de comando aguardando uma sequência de identificação.:", cor=Fore.WHITE)
+    digitar_pausado("A base de tudo é a memória. Identifique-se para iniciar o protocolo.", cor=Fore.YELLOW)
     
-    print("\n" + Fore.GREEN + "-"*60)
+    print("\n" + Fore.GREEN + Style.BRIGHT + "-"*60)
     print(Fore.CYAN + "SEQUÊNCIA DE BYTES DETECTADA NO BUFFER DE ENTRADA:")
     print(Fore.WHITE + Style.BRIGHT + "41  52  49  41  44  4e  45")
     print(Fore.GREEN + "-"*60 + "\n")
@@ -50,7 +49,7 @@ def fase_1():
 
         if entrada == "ARIADNE":
             print("\n")
-            digitar_pausado(Fore.GREEN + ">>> PROCESSANDO IDENTIFICAÇÃO...", atraso=0.1)
+            digitar_pausado(">>> PROCESSANDO IDENTIFICAÇÃO...", atraso=0.1, cor=Fore.GREEN)
             time.sleep(1)
             print(Fore.GREEN + "[ OK ] IDENTIDADE RECONHECIDA.")
             time.sleep(0.5)
@@ -58,8 +57,8 @@ def fase_1():
             time.sleep(0.5)
             
             print("\n" + Fore.CYAN + "*"*60)
-            digitar_pausado(Fore.CYAN + "BEM-VINDA DE VOLTA, ARIADNE.")
-            digitar_pausado(Fore.CYAN + "O acesso ao Nível 2 foi liberado no servidor local.")
+            digitar_pausado("BEM-VINDA DE VOLTA, ARIADNE.", cor=Fore.CYAN)
+            digitar_pausado("O acesso ao Nível 2 foi liberado no servidor local.", cor=Fore.CYAN)
             print(Fore.CYAN + "*"*60)
             
             print("\n" + Fore.WHITE + "Anote este nome. Você precisará dele para o filtro de integridade.")
@@ -68,7 +67,7 @@ def fase_1():
             break
         else:
             tentativas += 1
-            digitar_pausado(Fore.GREEN + ">>> PROCESSANDO IDENTIFICAÇÃO...", atraso=0.1)
+            digitar_pausado(">>> PROCESSANDO IDENTIFICAÇÃO...", atraso=0.1, cor=Fore.GREEN)
             time.sleep(1)
             print(Fore.RED + ">>> ACESSO NEGADO: IDENTIFICAÇÃO INVÁLIDA.")
             if tentativas >= 3:
