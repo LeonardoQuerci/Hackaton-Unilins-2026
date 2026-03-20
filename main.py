@@ -3,10 +3,7 @@ import sys
 import os
 from colorama import Fore, Style, init
 
-# Inicializa o colorama para cores no terminal
-init(autoreset=True)
 
-# Revisar a mudança de cores 
 def digitar_pausado(texto, atraso=0.05, cor=""):
     sys.stdout.write(cor)
     for char in texto:
@@ -14,6 +11,7 @@ def digitar_pausado(texto, atraso=0.05, cor=""):
         sys.stdout.flush()
         time.sleep(atraso)
     sys.stdout.write(Style.RESET_ALL)
+    print()
 
 
 def limpar_tela():
@@ -37,7 +35,7 @@ def fase_1():
     digitar_pausado("\nApós meses de investigação sobre o paradeiro do Dr. Alistair Vance, você finalmente consegue acesso físico ao seu laboratório particular. No centro da sala, um terminal de fósforo verde antigo permanece ligado. A tela está bloqueada por um protocolo de segurança de baixo nível, emitindo um brilho hipnótico. Não há campos para digitar nomes, apenas um prompt de comando aguardando uma sequência de identificação.:", cor=Fore.WHITE)
     digitar_pausado("A base de tudo é a memória. Identifique-se para iniciar o protocolo.", cor=Fore.YELLOW)
     
-    print("\n" + Fore.GREEN + "-"*60)
+    print("\n" + Fore.GREEN + Style.BRIGHT + "-"*60)
     print(Fore.CYAN + "SEQUÊNCIA DE BYTES DETECTADA NO BUFFER DE ENTRADA:")
     print(Fore.WHITE + Style.BRIGHT + "41  52  49  41  44  4e  45")
     print(Fore.GREEN + "-"*60 + "\n")
@@ -69,7 +67,7 @@ def fase_1():
             break
         else:
             tentativas += 1
-            digitar_pausado(">>> PROCESSANDO IDENTIFICAÇÃO...", cor=Fore.GREEN)
+            digitar_pausado(">>> PROCESSANDO IDENTIFICAÇÃO...", atraso=0.1, cor=Fore.GREEN)
             time.sleep(1)
             print(Fore.RED + ">>> ACESSO NEGADO: IDENTIFICAÇÃO INVÁLIDA.")
             if tentativas >= 3:
