@@ -32,7 +32,24 @@ def fase_1():
     time.sleep(1)
     digitar_pausado("Acesso físico detectado no Laboratório Particular.", cor=Fore.GREEN)
     time.sleep(1)
-    digitar_pausado("\nApós meses de investigação sobre o paradeiro do Dr. Alistair Vance, você finalmente consegue acesso físico ao seu laboratório particular. No centro da sala, um terminal de fósforo verde antigo permanece ligado. A tela está bloqueada por um protocolo de segurança de baixo nível, emitindo um brilho hipnótico. Não há campos para digitar nomes, apenas um prompt de comando aguardando uma sequência de identificação.:", cor=Fore.WHITE)
+    narrativa_detetive = (
+        "\nRELATÓRIO DE INVESTIGAÇÃO - CASO VANCE - DIA 184.\n"
+        "As pistas esfriaram, a polícia desistiu, mas você não.\n"
+        "Você é o último detetive que acredita que o Dr. Alistair Vance\n"
+        "não 'desapareceu' simplesmente. Um gênio da criptografia não\n"
+        "deixa sua vida para trás sem um plano.\n\n"
+        "As lendas sobre Vance dizem que ele estava à beira de uma\n"
+        "descoberta que mudaria a segurança digital global. Seus e-mails\n"
+        "interceptados falavam de 'uma herança que deve ser protegida'.\n"
+        "Mas protegida de quem? E para quem?\n\n"
+        "Suas buscas te levaram a este laboratório esquecido. O ar está\n"
+        "pesado com o cheiro de ozônio e segredos. Diante de você,\n"
+        "um terminal antigo, o coração pulsante do legado de Vance.\n"
+        "Para descobrir a verdade sobre seu desaparecimento, você\n"
+        "precisa pensar como ele. A primeira barreira está à sua frente."
+    )
+
+    digitar_pausado(narrativa_detetive, cor=Fore.WHITE)
     digitar_pausado("A base de tudo é a memória. Identifique-se para iniciar o protocolo.", cor=Fore.YELLOW)
     
     print("\n" + Fore.GREEN + Style.BRIGHT + "-"*60)
