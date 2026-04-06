@@ -45,6 +45,22 @@ async function verificar() {
     return;
   }
 
+  // Detecta jogador que avançou 7 posições em vez de recuar (César +7 em SPILYKHKL = ZWPSFRORS)
+  if (senha_fase2 === "ZWPSFRORS") {
+    feedback.className = "";
+    feedback.classList.add("show", "dica");
+    feedback.innerHTML = `
+      >>> ACESSO NEGADO: DIREÇÃO INCORRETA.<br><br>
+      <span style="font-size:13px; font-family:'Share Tech Mono',monospace; letter-spacing:1.5px;">
+        Ariadne sempre foi rápida... ela deixou o rastro 7 posições à frente de onde ele deveria estar.<br>
+        Para desfazer o que foi feito, você precisa retroceder o caminho que ela percorreu.
+      </span>
+    `;
+    document.getElementById("resposta").value = "";
+    document.getElementById("resposta").focus();
+    return;
+  }
+
   tentativas++;
   cont.textContent = tentativas;
 
@@ -83,12 +99,6 @@ async function verificar() {
       ACESSO CONCEDIDO<br>
       CÓDIGO DE SISTEMA: <span style="color:#00ff00; font-weight:bold;">${codigoFinal}</span><br>
       NÚMERO DA SORTE REGISTRADO: 7<br>
-      <br>
-      <span style="font-size:15px; font-family:'Share Tech Mono',monospace; letter-spacing:2px; color: #00e5ff88;">
-        Ariadne sempre foi rápida...<br>
-        Ela deixou o rastro 7 posições à frente.<br>
-        Para avançar, retroceda o caminho que ela percorreu.
-      </span>
     `;
     document.getElementById("resposta").disabled = true;
     document.querySelector("button").disabled = true;
