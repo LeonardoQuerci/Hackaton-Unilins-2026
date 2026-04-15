@@ -3,7 +3,7 @@ import sys
 import os
 from colorama import Fore, Style, init
 
-
+#0.05
 def digitar_pausado(texto, atraso=0.05, cor=""):
     sys.stdout.write(cor)
     for char in texto:
@@ -56,6 +56,7 @@ def fase_1():
     print(Fore.CYAN + "SEQUÊNCIA DE BYTES DETECTADA NO BUFFER DE ENTRADA:")
     print(Fore.WHITE + Style.BRIGHT + "41  52  49  41  44  4e  45")
     print(Fore.GREEN + "-"*60 + "\n")
+    sys.stdout.write(Style.RESET_ALL)
 
     # Lógica de validação
     tentativas = 0
@@ -89,6 +90,7 @@ def fase_1():
             print(Fore.RED + ">>> ACESSO NEGADO: IDENTIFICAÇÃO INVÁLIDA.")
             if tentativas >= 3:
                 print(Fore.RED + Style.DIM + "DICA: O sistema fala em hexadecimal. A Tabela ASCII é a sua chave.")
+                sys.stdout.write(Style.RESET_ALL)
             print("\n")
 
 if __name__ == "__main__":
