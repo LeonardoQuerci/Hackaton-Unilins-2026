@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Banner — Hackathon de Enigmas (com QR)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #111;
+    display: flex;
+    justify-content: center;
+    padding: 48px 24px;
+    min-height: 100vh;
+  }
+
+  @media print {
+    body { background: #020d04; padding: 0; }
+    .hint { display: none; }
+  }
+
+  .hint {
+    position: fixed;
+    top: 14px;
+    right: 20px;
+    font-family: monospace;
+    font-size: 11px;
+    color: #444;
+    letter-spacing: 1px;
+    line-height: 1.9;
+    text-align: right;
+  }
+
+  .flyer {
+    width: 148mm;
+    min-height: 210mm;
+    background: #020d04;
+    font-family: 'Share Tech Mono', monospace;
+    color: #00ff41;
+    padding: 30px 28px 28px;
+    position: relative;
+    outline: 1px solid #00aa2a;
+    outline-offset: -1px;
+  }
+
+  .inner-border { position: absolute; inset: 8px; border: 1px solid #0a2a10; pointer-events: none; }
+  .scanlines {
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(to bottom, transparent 0px, transparent 3px, rgba(0,255,65,0.018) 3px, rgba(0,255,65,0.018) 4px);
+    pointer-events: none;
+  }
+  .corner { position: absolute; width: 18px; height: 18px; border-color: #00ff41; border-style: solid; }
+  .tl { top: 4px; left: 4px; border-width: 2px 0 0 2px; }
+  .tr { top: 4px; right: 4px; border-width: 2px 2px 0 0; }
+  .bl { bottom: 4px; left: 4px; border-width: 0 0 2px 2px; }
+  .br { bottom: 4px; right: 4px; border-width: 0 2px 2px 0; }
+
+  .eyebrow { font-size: 9px; color: #00aa2a; letter-spacing: 5px; text-align: center; border-top: 1px solid #0a2a10; border-bottom: 1px solid #0a2a10; padding: 5px 0; margin-bottom: 22px; }
+
+  .title-wrap { text-align: center; margin-bottom: 12px; }
+  .main-title { font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 46px; letter-spacing: 6px; line-height: 1.05; color: #00ff41; display: block; text-shadow: 0 0 24px rgba(0,255,65,0.2); }
+  .sub-title { font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 16px; color: #ffb300; letter-spacing: 10px; display: block; margin-top: 8px; }
+
+  .rule { display: flex; align-items: center; gap: 10px; margin: 20px 0; color: #1a4a20; font-size: 8px; letter-spacing: 3px; }
+  .rule-line { flex: 1; height: 1px; background: #0a2a10; }
+
+  .briefing { border: 1px solid #00aa2a; padding: 13px 16px; margin-bottom: 14px; position: relative; }
+  .briefing-tag { position: absolute; top: -9px; left: 12px; background: #020d04; padding: 0 6px; font-size: 8px; color: #ff2222; letter-spacing: 2px; }
+  .briefing ul { list-style: none; }
+  .briefing ul li { font-size: 11.5px; color: #6ab878; line-height: 2.1; letter-spacing: 0.3px; }
+  .briefing ul li::before { content: '>  '; color: #ffb300; }
+
+  .skills { border: 1px solid #003b0f; padding: 13px 16px; margin-bottom: 14px; position: relative; }
+  .skills-tag { position: absolute; top: -9px; left: 12px; background: #020d04; padding: 0 6px; font-size: 8px; color: #00e5ff; letter-spacing: 2px; }
+  .skills-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 2px; }
+  .skill-item { border: 1px solid #0a2a10; padding: 8px 10px; text-align: center; }
+  .skill-icon { font-family: 'Share Tech Mono', monospace; font-size: 20px; color: #00e5ff; display: block; margin-bottom: 4px; }
+  .skill-label { font-size: 9px; color: #4a8a58; line-height: 1.5; letter-spacing: 0.5px; display: block; }
+
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+  .info-cell { border: 1px solid #0a2a10; padding: 10px 12px; }
+  .info-cell-label { font-size: 8px; color: #1a4a20; letter-spacing: 2px; margin-bottom: 5px; }
+  .info-cell-value { font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 16px; color: #ffb300; letter-spacing: 1px; }
+
+  .bottom-row { display: flex; gap: 14px; align-items: flex-start; }
+  .qr-block { display: flex; flex-direction: column; align-items: center; gap: 6px; flex-shrink: 0; }
+  .qr-outer { border: 1px solid #00aa2a; padding: 8px; position: relative; }
+  .qr-tag { position: absolute; top: -8px; left: 6px; background: #020d04; padding: 0 5px; font-size: 7.5px; color: #ffb300; letter-spacing: 1px; }
+  .qr-inner { width: 86px; height: 86px; background: #061208; border: 1px solid #0a2a10; display: flex; align-items: center; justify-content: center; }
+  .qr-sub { font-size: 8px; color: #1a4a20; letter-spacing: 1px; text-align: center; }
+
+  .cta-block { flex: 1; display: flex; flex-direction: column; gap: 10px; padding-top: 4px; }
+  .cta-text { font-size: 11px; color: #4a8458; line-height: 1.9; letter-spacing: 0.5px; }
+  .cta-cmd { font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 12px; color: #00e5ff; letter-spacing: 3px; border: 1px solid rgba(0,229,255,0.3); padding: 9px 12px; }
+
+  .footer { margin-top: 14px; border-top: 1px solid #0a2a10; padding-top: 10px; display: flex; justify-content: space-between; font-size: 8.5px; color: #1a4a20; letter-spacing: 1.5px; }
+</style>
+</head>
+<body>
+
+<div class="hint">
+  Para salvar como PDF:<br>
+  Ctrl+P → Salvar como PDF<br>
+  ✓ Ativar "Gráficos de fundo"
+</div>
+
+<div class="flyer">
+  <div class="scanlines"></div>
+  <div class="corner tl"></div>
+  <div class="corner tr"></div>
+  <div class="corner bl"></div>
+  <div class="corner br"></div>
+  <div class="inner-border"></div>
+
+  <div class="eyebrow">// OPERAÇÃO CLASSIFICADA //</div>
+
+  <div class="title-wrap">
+    <span class="main-title">HACKATHON</span>
+    <span class="sub-title">DE ENIGMAS</span>
+  </div>
+
+  <div class="rule">
+    <div class="rule-line"></div>
+    <span>MISSÃO ACEITA?</span>
+    <div class="rule-line"></div>
+  </div>
+
+  <div class="briefing">
+    <span class="briefing-tag">BRIEFING — NÍVEL RESTRITO</span>
+    <ul>
+      <li>Decifre códigos e quebre criptografias</li>
+      <li>Resolva enigmas em cadeia colaborativa</li>
+      <li>Navegue por desafios de lógica e puzzle</li>
+      <li>Apenas os mais perspicazes chegarão ao fim</li>
+    </ul>
+  </div>
+
+  <div class="skills">
+    <span class="skills-tag">HABILIDADES REQUERIDAS</span>
+    <div class="skills-grid">
+      <div class="skill-item">
+        <span class="skill-icon">01</span>
+        <span class="skill-label">Raciocínio<br>Lógico</span>
+      </div>
+      <div class="skill-item">
+        <span class="skill-icon">10</span>
+        <span class="skill-label">Mudança de<br>Base Numérica</span>
+      </div>
+      <div class="skill-item">
+        <span class="skill-icon">{ }</span>
+        <span class="skill-label">Laços de<br>Programação</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-grid">
+    <div class="info-cell">
+      <div class="info-cell-label">// DATA</div>
+      <div class="info-cell-value">02/06</div>
+    </div>
+    <div class="info-cell">
+      <div class="info-cell-label">// HORÁRIO</div>
+      <div class="info-cell-value">19:00</div>
+    </div>
+    <div class="info-cell">
+      <div class="info-cell-label">// LOCAL</div>
+      <div class="info-cell-value">CDI 04</div>
+    </div>
+  </div>
+
+  <div class="bottom-row">
+    <div class="qr-block">
+      <div class="qr-outer">
+        <span class="qr-tag">INSCRIÇÃO</span>
+        <div class="qr-inner">
+          <!-- SUBSTITUA PELO SEU QR CODE REAL -->
+          <svg width="74" height="74" viewBox="0 0 74 74" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="4" width="20" height="20" fill="none" stroke="#00ff41" stroke-width="1.5"/>
+            <rect x="8" y="8" width="12" height="12" fill="#00ff41"/>
+            <rect x="50" y="4" width="20" height="20" fill="none" stroke="#00ff41" stroke-width="1.5"/>
+            <rect x="54" y="8" width="12" height="12" fill="#00ff41"/>
+            <rect x="4" y="50" width="20" height="20" fill="none" stroke="#00ff41" stroke-width="1.5"/>
+            <rect x="8" y="54" width="12" height="12" fill="#00ff41"/>
+            <rect x="28" y="4" width="4" height="4" fill="#00ff41"/>
+            <rect x="34" y="4" width="4" height="4" fill="#00ff41"/>
+            <rect x="28" y="10" width="4" height="4" fill="#00ff41"/>
+            <rect x="34" y="16" width="4" height="4" fill="#00ff41"/>
+            <rect x="40" y="10" width="4" height="4" fill="#00ff41"/>
+            <rect x="28" y="28" width="4" height="4" fill="#00ff41"/>
+            <rect x="34" y="28" width="4" height="4" fill="#00ff41"/>
+            <rect x="40" y="28" width="4" height="4" fill="#00ff41"/>
+            <rect x="46" y="28" width="4" height="4" fill="#00ff41"/>
+            <rect x="28" y="34" width="4" height="4" fill="#00ff41"/>
+            <rect x="40" y="34" width="4" height="4" fill="#00ff41"/>
+            <rect x="28" y="40" width="4" height="4" fill="#00ff41"/>
+            <rect x="34" y="40" width="4" height="4" fill="#00ff41"/>
+            <rect x="46" y="40" width="4" height="4" fill="#00ff41"/>
+            <rect x="28" y="46" width="4" height="4" fill="#00ff41"/>
+            <rect x="40" y="46" width="4" height="4" fill="#00ff41"/>
+            <rect x="34" y="52" width="4" height="4" fill="#00ff41"/>
+            <rect x="40" y="52" width="4" height="4" fill="#00ff41"/>
+            <rect x="46" y="52" width="4" height="4" fill="#00ff41"/>
+            <rect x="28" y="58" width="4" height="4" fill="#00ff41"/>
+            <rect x="46" y="58" width="4" height="4" fill="#00ff41"/>
+            <rect x="28" y="64" width="4" height="4" fill="#00ff41"/>
+            <rect x="34" y="64" width="4" height="4" fill="#00ff41"/>
+            <rect x="40" y="64" width="4" height="4" fill="#00ff41"/>
+            <rect x="46" y="64" width="4" height="4" fill="#00ff41"/>
+            <rect x="50" y="28" width="4" height="4" fill="#00ff41"/>
+            <rect x="56" y="28" width="4" height="4" fill="#00ff41"/>
+            <rect x="62" y="28" width="4" height="4" fill="#00ff41"/>
+            <rect x="50" y="34" width="4" height="4" fill="#00ff41"/>
+            <rect x="62" y="34" width="4" height="4" fill="#00ff41"/>
+            <rect x="56" y="40" width="4" height="4" fill="#00ff41"/>
+            <rect x="62" y="40" width="4" height="4" fill="#00ff41"/>
+          </svg>
+        </div>
+      </div>
+      <div class="qr-sub">APONTE A CÂMERA</div>
+    </div>
+
+    <div class="cta-block">
+      <div class="cta-text">Forme sua equipe e prepare-se.<br>Um agente sozinho não vai longe.</div>
+      <div class="cta-cmd">INSCREVA-SE AGORA</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>ORGANIZADO POR: IBTP</span>
+    <span>■ ■ ■</span>
+    <span>ACESSO: LIVRE</span>
+  </div>
+</div>
+
+</body>
+</html>
