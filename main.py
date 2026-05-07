@@ -285,17 +285,10 @@ def fase_3():
     separador()
     print(Fore.YELLOW + Style.BRIGHT + " >>> DICA DO SISTEMA:")
     dica = (
-        " Para verificar se um número é primo, basta testar os\n"
-        " divisores entre 2 e a RAIZ QUADRADA do número.\n"
-        " Qualquer divisor encontrado nesse intervalo já descarta\n"
-        " o candidato — não é necessário ir além disso.\n"
+        " Para identificar um número primo, basta testar se ele\n"
+        " é divisível por algum número entre 2 e o valor de sua RAÍZ QUADRADA.\n"
+        " Se ele não for divisível, então será primo.\n"
     )
-    digitar_pausado(dica, atraso=0.02, cor=Fore.YELLOW)
-    separador()
-    print()
-    print(Fore.WHITE + " Abra o VSCode, escreva seu programa e rode-o.")
-    print(Fore.WHITE + " Quando obtiver o resultado, volte aqui e insira o checksum.")
-    print()
 
     CHECKSUM_CORRETO = 771483
     tentativas = 0
@@ -645,7 +638,7 @@ def _conversa_vance():
         if hashlib.sha256(e.encode()).hexdigest() == HASH_CHECK:
             print(); _vance_pensando(3.0)
             _vance_digita("771483.", atraso=0.16); time.sleep(1.5)
-            _vance_digita("sophie germain teria ficado orgulhosa.", atraso=0.08); time.sleep(2.5)
+            _vance_digita("Eu estou orgulhoso.", atraso=0.08); time.sleep(2.5)
             break
         else:
             print(); _vance_pensando(1.5)
