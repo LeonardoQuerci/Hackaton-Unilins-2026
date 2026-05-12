@@ -11,6 +11,20 @@ init(autoreset=True)
 # Utilitários
 # ──────────────────────────────────────────────
 
+def limpar_stdin():
+    """Descarta tudo que foi digitado enquanto o terminal estava escrevendo.
+
+    Windows : lê e descarta todos os caracteres pendentes via msvcrt.
+    Linux/Mac: substitui o buffer do stdin por uma cópia zerada via termios.
+    Sem esse flush, teclas pressionadas durante as animações são
+    capturadas pelo próximo input() e executadas como resposta.
+    """
+    if os.name == 'nt':
+        import msvcrt
+        while msvcrt.kbhit():
+            msvcrt.getwch()
+
+
 def digitar_pausado(texto, atraso=0.0005, cor=""):
     sys.stdout.write(cor)
     for char in texto:
@@ -81,6 +95,7 @@ def fase_1():
     tentativas = 0
     while True:
         print(Fore.GREEN + "VANCE_OS > ", end="")
+        limpar_stdin()
         entrada = input().strip().upper()
 
         if entrada == "ARIADNE":
@@ -191,6 +206,7 @@ def ponte_fase_2():
     tentativas = 0
     while True:
         print(Fore.GREEN + "VANCE_OS [CÓDIGO FASE 2] > ", end="")
+        limpar_stdin()
         entrada = input().strip().upper()
 
         hash_entrada = hashlib.sha256(entrada.encode()).hexdigest()
@@ -283,18 +299,19 @@ def fase_3():
     digitar_pausado(regra, atraso=0.02, cor=Fore.WHITE)
 
     separador()
-    print(Fore.YELLOW + Style.BRIGHT + " >>> DICA DO SISTEMA:")
-    dica = (
-        " Para identificar um número primo, basta testar se ele\n"
-        " é divisível por algum número entre 2 e o valor de sua RAÍZ QUADRADA.\n"
-        " Se ele não for divisível, então será primo.\n"
-    )
+    # print(Fore.YELLOW + Style.BRIGHT + " >>> DICA DO SISTEMA:")
+    # dica = (
+    #     " Para identificar um número primo, basta testar se ele\n"
+    #     " é divisível por algum número entre 2 e o valor de sua RAÍZ QUADRADA.\n"
+    #     " Se ele não for divisível, então será primo.\n"
+    # )
 
     CHECKSUM_CORRETO = 771483
     tentativas = 0
 
     while True:
         print(Fore.GREEN + "VANCE_OS [CHECKSUM] > ", end="")
+        limpar_stdin()
         entrada = input().strip().replace(".", "").replace(",", "").replace(" ", "")
 
         try:
@@ -437,7 +454,7 @@ def _enigma_vigenere():
     limpar_tela()
     print(Fore.RED + Style.BRIGHT + "╔" + "═"*58 + "╗")
     print(Fore.RED + Style.BRIGHT + "║" + " PROTOCOLO SIGMA  ·  NÍVEL MÁXIMO  ·  ACESSO RESTRITO ".center(58) + "║")
-    print(Fore.RED + Style.BRIGHT + "║" + " LEGADO DE VANCE  ·  AUTENTICAÇÃO FINAL               ".center(58) + "║")
+    print(Fore.RED + Style.BRIGHT + "║" + " ARQUIVO CIFRADO  ·  AUTENTICAÇÃO FINAL               ".center(58) + "║")
     print(Fore.RED + Style.BRIGHT + "╚" + "═"*58 + "╝")
     print(); time.sleep(1.0)
 
@@ -498,14 +515,15 @@ def _enigma_vigenere():
     print(Fore.GREEN + Style.DIM + "  >> ASSINATURA             : A.V / [ARIADNE]")
     print(); time.sleep(0.8)
 
-    print(Fore.RED + Style.BRIGHT + "  ╔══════════════════════════════════════════════════════════╗")
-    print(Fore.RED + Style.BRIGHT + "  ║  AUTENTICAÇÃO SIGMA — INSIRA A PALAVRA DO LEGADO        ║")
-    print(Fore.RED + Style.BRIGHT + "  ╚══════════════════════════════════════════════════════════╝")
+    print(Fore.RED + Style.BRIGHT + "  ╔══════════════════════╗")
+    print(Fore.RED + Style.BRIGHT + "  ║  AUTENTICAÇÃO SIGMA  ║")
+    print(Fore.RED + Style.BRIGHT + "  ╚══════════════════════╝")
     print()
 
     tentativas = 0
     while True:
         print(Fore.RED + Style.BRIGHT + "  SIGMA > ", end="")
+        limpar_stdin()
         entrada = input().strip().upper()
         digest  = hashlib.sha256(entrada.encode()).hexdigest()
         tentativas += 1
@@ -520,7 +538,7 @@ def _enigma_vigenere():
             print(Fore.GREEN + "  [ OK ] PROTOCOLO SIGMA — SELADO.")
             time.sleep(0.8); print()
             print(Fore.CYAN + Style.BRIGHT + "  " + "═"*56)
-            for l in ["  O LEGADO DE VANCE ESTÁ DESBLOQUEADO.",
+            for l in ["  O ARQUIVO DE VANCE ESTÁ DESBLOQUEADO.",
                       "  Você encontrou o que ele protegeu por anos.",
                       "  Prepare-se. A transmissão final começa agora."]:
                 _dp(Fore.CYAN + Style.BRIGHT + l, atraso=0.045); time.sleep(0.2)
@@ -529,18 +547,18 @@ def _enigma_vigenere():
             return
         else:
             print(Fore.RED + f"  >>> PALAVRA INVÁLIDA. [TENTATIVA {tentativas}]"); print()
-            if tentativas == 2:
+            if tentativas == 3:
                 print(Fore.RED + Style.DIM + "  DICA: Existe um ritmo escondido no fluxo.")
                 print(Fore.RED + Style.DIM + "        O número da sorte define esse ritmo.")
-            elif tentativas == 4:
+            elif tentativas == 5:
                 print(Fore.RED + Style.DIM + "  DICA: Extraia os bytes seguindo o passo correto.")
                 print(Fore.RED + Style.DIM + "        O que sobrar é uma cifra polialfabética.")
-            elif tentativas == 6:
+            elif tentativas == 7:
                 print(Fore.RED + Style.DIM + "  DICA: A herdeira de Vance é a chave da tabela.")
                 print(Fore.RED + Style.DIM + "        Você já sabe o nome dela desde o início.")
-            elif tentativas >= 8:
-                print(Fore.RED + Style.DIM + "  DICA FINAL: Passo=7 → posições 1,8,15,22,29,36 → LVOAGB")
-                print(Fore.RED + Style.DIM + "              Chave=ARIADNE → Vigenère → ?")
+            # elif tentativas >= 8:
+            #     print(Fore.RED + Style.DIM + "  DICA FINAL: Passo=7 → posições 1,8,15,22,29,36 → LVOAGB")
+            #     print(Fore.RED + Style.DIM + "              Chave=ARIADNE → Vigenère → ?")
             print()
 
 
@@ -605,6 +623,7 @@ def _conversa_vance():
     print()
     while True:
         print(Fore.GREEN + "VOCE > ", end="")
+        limpar_stdin()
         e = input().strip().upper()
         if hashlib.sha256(e.encode()).hexdigest() == HASH_ARIADNE:
             print(); _vance_pensando(3.5)
@@ -620,6 +639,7 @@ def _conversa_vance():
     _vance_digita("o numero. o ritmo que guiou o fluxo corrompido.", atraso=0.07, cor=Fore.YELLOW); print()
     while True:
         print(Fore.GREEN + "VOCE > ", end="")
+        limpar_stdin()
         e = input().strip()
         if hashlib.sha256(e.encode()).hexdigest() == HASH_7:
             print(); _vance_pensando(2.5)
@@ -634,6 +654,7 @@ def _conversa_vance():
     _vance_digita("o checksum. a soma que prova que voce entendeu a terceira fase.", atraso=0.07, cor=Fore.YELLOW); print()
     while True:
         print(Fore.GREEN + "VOCE > ", end="")
+        limpar_stdin()
         e = input().strip().replace(".","").replace(",","").replace(" ","")
         if hashlib.sha256(e.encode()).hexdigest() == HASH_CHECK:
             print(); _vance_pensando(3.0)
