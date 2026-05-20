@@ -7,6 +7,20 @@ from colorama import Fore, Style, init
 
 init(autoreset=True)
 
+# Tela cheia proporcional no Windows
+if os.name == 'nt':
+    import ctypes
+    try:
+        # Detecta se está rodando dentro do Windows Terminal (wt.exe)
+        # Se sim, não tem como controlar o tamanho via API — ignora
+        # Se é cmd.exe tradicional, maximiza via API
+        hwnd = ctypes.windll.kernel32.GetConsoleWindow()
+        if hwnd:
+            ctypes.windll.user32.ShowWindow(hwnd, 3)  # SW_MAXIMIZE
+            time.sleep(0.3)
+    except Exception:
+        pass
+
 # ──────────────────────────────────────────────
 # Utilitários
 # ──────────────────────────────────────────────
@@ -25,7 +39,7 @@ def limpar_stdin():
             msvcrt.getwch()
 
 
-def digitar_pausado(texto, atraso=0.0005, cor=""):
+def digitar_pausado(texto, atraso=0.05, cor=""):
     sys.stdout.write(cor)
     for char in texto:
         sys.stdout.write(char)
@@ -129,11 +143,20 @@ def fase_1():
 # PONTE — Link para Fase 2 + validação do código
 # ──────────────────────────────────────────────
 
+def _base_dir():
+    """
+    Retorna o diretório correto tanto como .py quanto como .exe (PyInstaller).
+    Quando empacotado, sys.executable aponta para o .exe.
+    """
+    if getattr(sys, "frozen", False):
+        return os.path.dirname(sys.executable)
+    return os.path.dirname(os.path.abspath(__file__))
+
+
 def ponte_fase_2():
     """Exibe o link local para fase2.html, abre no navegador e valida o código de retorno."""
 
-    # Caminho absoluto relativo ao próprio script
-    script_dir = os.path.dirname(os.path.abspath(__file__))
+    script_dir = _base_dir()
     fase2_path = os.path.join(script_dir, "fase2.html")
     url_local = "file:///" + fase2_path.replace("\\", "/")
 
@@ -736,11 +759,119 @@ def fase_4():
 # Ponto de entrada
 # ──────────────────────────────────────────────
 
+def tela_inicial():
+    """Tela de confirmação antes de começar — cria suspense e aguarda ENTER."""
+    limpar_tela()
+    time.sleep(0.3)
+
+    linhas = [
+        ("", None, 0),
+        ("", None, 0),
+        ("", None, 0),
+        ("  ██╗   ██╗ █████╗ ███╗   ██╗ ██████╗███████╗", Fore.GREEN, 0.004),
+        ("  ██║   ██║██╔══██╗████╗  ██║██╔════╝██╔════╝", Fore.GREEN, 0.004),
+        ("  ██║   ██║███████║██╔██╗ ██║██║     █████╗  ", Fore.GREEN, 0.004),
+        ("  ╚██╗ ██╔╝██╔══██║██║╚██╗██║██║     ██╔══╝  ", Fore.GREEN, 0.004),
+        ("   ╚████╔╝ ██║  ██║██║ ╚████║╚██████╗███████╗", Fore.GREEN, 0.004),
+        ("    ╚═══╝  ╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝╚══════╝", Fore.GREEN, 0.004),
+        ("", None, 0),
+        ("       ██████╗ ███████╗", Fore.GREEN, 0.004),
+        ("      ██╔═══██╗██╔════╝", Fore.GREEN, 0.004),
+        ("      ██║   ██║███████╗ ", Fore.GREEN, 0.004),
+        ("      ██║   ██║╚════██║ ", Fore.GREEN, 0.004),
+        ("      ╚██████╔╝███████║ ", Fore.GREEN, 0.004),
+        ("       ╚═════╝ ╚══════╝ ", Fore.GREEN, 0.004),
+        ("", None, 0),
+        ("  SISTEMA OPERACIONAL VANCE  ·  v1.0.4  ·  1987", Fore.GREEN, 0.006),
+        ("  HACKATHON UNILINS 2026     ·  CASO CLASSIFICADO", Fore.GREEN, 0.006),
+        ("", None, 0),
+        ("  " + "─" * 54, Fore.GREEN, 0.003),
+        ("", None, 0),
+    ]
+
+    for texto, cor, vel in linhas:
+        if cor:
+            for ch in texto:
+                sys.stdout.write(cor + Style.BRIGHT + ch + Style.RESET_ALL)
+                sys.stdout.flush()
+                time.sleep(vel)
+            print()
+        else:
+            print()
+
+    time.sleep(0.5)
+
+    perguntas = [
+        "  Um detetive.",
+        "  Um laboratório esquecido.",
+        "  Um segredo que a polícia não conseguiu resolver.",
+        "",
+        "  Você está prestes a entrar em uma investigação real.",
+        "  Quatro fases. Quatro barreiras. Uma verdade.",
+        "",
+        "  Nem todo mundo chega ao fim.",
+    ]
+
+    for linha in perguntas:
+        if linha == "":
+            print()
+            time.sleep(0.3)
+        else:
+            digitar_pausado(linha, atraso=0.04, cor=Fore.WHITE)
+            time.sleep(0.15)
+
+    time.sleep(0.8)
+    print()
+    print(Fore.GREEN + "  " + "─" * 54)
+    print()
+
+    # Pergunta de confirmação — pisca até o ENTER
+    mensagem = "  Tem certeza que quer participar desta investigação?"
+    digitar_pausado(mensagem, atraso=0.05, cor=Fore.YELLOW)
+    print()
+
+    for _ in range(3):
+        sys.stdout.write(Fore.GREEN + Style.BRIGHT + "  [ Pressione ENTER para iniciar ]" + Style.RESET_ALL)
+        sys.stdout.flush()
+        time.sleep(0.6)
+        sys.stdout.write("\r" + " " * 40 + "\r")
+        sys.stdout.flush()
+        time.sleep(0.4)
+
+    sys.stdout.write(Fore.GREEN + Style.BRIGHT + "  [ Pressione ENTER para iniciar ]" + Style.RESET_ALL)
+    sys.stdout.flush()
+
+    limpar_stdin()
+    input()
+    limpar_tela()
+
+
 if __name__ == "__main__":
     try:
+        tela_inicial()  # Confirmação + ENTER antes de começar
         fase_1()        # Hex → ARIADNE
         ponte_fase_2()  # Abre fase2.html → valida SYSTEM_OVERRIDE_09X
         fase_3()        # Sophie Germain → 771483
         fase_4()        # Vigenère → LEGADO → conversa com Vance → encerramento
+
+        # ── Após terminar — não fecha, aguarda ENTER dos organizadores ──────
+        print()
+        print(Fore.GREEN + "  " + "═" * 54)
+        print()
+        digitar_pausado(
+            "  INVESTIGAÇÃO CONCLUÍDA.",
+            atraso=0.07, cor=Fore.CYAN
+        )
+        digitar_pausado(
+            "  Este terminal permanecerá aberto para registro.",
+            atraso=0.04, cor=Fore.WHITE
+        )
+        print()
+        print(Fore.YELLOW + "  [ Organizadores: pressione ENTER para encerrar ]")
+        limpar_stdin()
+        input()
+
     except KeyboardInterrupt:
         print(Fore.RED + "\n\nConexao abortada pelo usuario.")
+        limpar_stdin()
+        input()

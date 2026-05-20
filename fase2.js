@@ -46,7 +46,7 @@ async function verificar() {
   }
 
   // Detecta jogador que avançou 7 posições em vez de recuar (César +7 em SPILYKHKL = ZWPSFRORS)
-  if (senha_fase2 === "XUNQDPMPQ") {
+  if (senha_fase2 === "ZWPSFRORS") {
     feedback.className = "";
     feedback.classList.add("show", "dica");
     feedback.innerHTML = `
