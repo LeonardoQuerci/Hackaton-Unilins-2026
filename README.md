@@ -74,4 +74,7 @@ Bem-vindo ao **The Vance Legacy**, um desafio imersivo de lógica, programação
 
 > *"A segurança não reside na força bruta, mas na elegância dos números que geram a si mesmos."* — **Dr. Alistair Vance**
 
-**Status do Sistema:** Aguardando sequência de identificação...
+**PROJETO REALIZADO POR:**
+-Leonardo Querci Prado Hernandes 
+-Arthur Henrique de Souza
+-Miguel Vieira Menezes da Silva
